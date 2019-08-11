@@ -5,7 +5,7 @@ import os, sys
 sys.path.append(os.path.abspath('..'))
 from pages.loginPage import LoginPage
 from pages.homePage import HomePage
-
+import HtmlTestRunner
 
 class LoginTetst(unittest.TestCase):
     @classmethod
@@ -28,7 +28,19 @@ class LoginTetst(unittest.TestCase):
         homepage.click_logout()
         
         time.sleep(2)
+    def test_Login_invalid_username(self):
+        driver = self.driver
 
+        driver.get("https://opensource-demo.orangehrmlive.com")
+
+        login = LoginPage(driver)
+        login.enter_username("Admin1")
+        login.enter_password("admin123")
+        login.click_login()
+        
+        msg = login.check_invalid_span_msg()
+        self.assertEqual(msg, "Invalid credentials")
+        time.sleep(2)
     @classmethod
     def tearDownClass(cls):
         cls.driver.close()
@@ -36,4 +48,4 @@ class LoginTetst(unittest.TestCase):
         print("test completed")
 
 if __name__ == '__main__':
-    unittest.main()   
+    unittest.main(testRunner=HtmlTestRunner.HTMLTestRunner(output='../reports'))   
